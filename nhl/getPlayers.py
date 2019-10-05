@@ -24,15 +24,19 @@ static_dict = {8475222: 'Sami Vatanen', 8473463: 'Leo Komarov', 8481554: 'Kaapo 
                8477293: 'Antti Raanta', 8481573: 'Marcus Kallionkieli'}
 key_list = list(static_dict.keys())
 
+
 def printStats(day, key_list):
     for key in key_list:
         errorFlag = False
-        r = urllib.request.urlopen("https://statsapi.web.nhl.com/api/v1/people/{}/stats?stats=gameLog&season={}".format(key, season)).read()
+        r = urllib.request.urlopen(
+            "https://statsapi.web.nhl.com/api/v1/people/{}/stats?stats=gameLog&season={}".format(key, season)).read()
         player = json.loads(r.decode('utf-8'))
         try:
             if day == player["stats"][0]["splits"][0]["date"]:
-                re = urllib.request.urlopen("https://statsapi.web.nhl.com//api/v1/game/{}/boxscore".format(str(player["stats"][0]["splits"][0]["game"]["gamePk"]))).read()
+                re = urllib.request.urlopen("https://statsapi.web.nhl.com//api/v1/game/{}/boxscore".format(
+                    str(player["stats"][0]["splits"][0]["game"]["gamePk"]))).read()
                 game = json.loads(re.decode('utf-8'))
+                playerStats = player["stats"][0]["splits"][0]["stat"]
                 if player["stats"][0]["splits"][0]["isHome"]:
                     homeTeam = player["stats"][0]["splits"][0]["team"]["name"]
                     awayTeam = player["stats"][0]["splits"][0]["opponent"]["name"]
@@ -42,26 +46,21 @@ def printStats(day, key_list):
                     homeGoals = game["teams"]["home"]["teamStats"]["teamSkaterStats"]["goals"]
                     awayGoals = game["teams"]["away"]["teamStats"]["teamSkaterStats"]["goals"]
                 print("{} {}+{}, {}, {}min, +/- {}, {} vs. {}, {}-{}".format(static_dict.get(key),
-                                                                 player["stats"][0]["splits"][0]["stat"][
-                                                                     "goals"],
-                                                                 player["stats"][0]["splits"][0]["stat"][
-                                                                     "assists"],
-                                                                 player["stats"][0]["splits"][0]["stat"][
-                                                                     "timeOnIce"],
-                                                                 player["stats"][0]["splits"][0]["stat"][
-                                                                     "penaltyMinutes"],
-                                                                 player["stats"][0]["splits"][0]["stat"][
-                                                                     "plusMinus"],
-                                                                 homeTeam, awayTeam, homeGoals, awayGoals))
+                                                                             playerStats["goals"],
+                                                                             playerStats["assists"],
+                                                                             playerStats["timeOnIce"],
+                                                                             playerStats["penaltyMinutes"],
+                                                                             playerStats["plusMinus"],
+                                                                             homeTeam, awayTeam, homeGoals, awayGoals))
         except:
             errorFlag = True
         if errorFlag:
             try:
                 if day == player["stats"][0]["splits"][0]["date"]:
-                    print( "{} {}/{} {}".format(static_dict.get(key),
-                                     player["stats"][0]["splits"][0]["stat"]["goalsAgainst"],
-                                     player["stats"][0]["splits"][0]["stat"]["shotsAgainst"],
-                                     player["stats"][0]["splits"][0]["stat"]))
+                    print("{} {}/{} {}".format(static_dict.get(key),
+                                               player["stats"][0]["splits"][0]["stat"]["goalsAgainst"],
+                                               player["stats"][0]["splits"][0]["stat"]["shotsAgainst"],
+                                               player["stats"][0]["splits"][0]["stat"]))
             except:
                 errorFlag = False
 
@@ -70,7 +69,7 @@ def printStats(day, key_list):
 # printStats(today, key_list)
 print(dday)
 printStats(dday, key_list)
+print("")
 print(ddayMinus)
 printStats(ddayMinus, key_list)
 print("It took {} seconds".format(int(time.time() - epoch_time_start)))
-
