@@ -24,7 +24,6 @@ static_dict = {8475222: 'Sami Vatanen', 8473463: 'Leo Komarov', 8481554: 'Kaapo 
                8477293: 'Antti Raanta', 8481573: 'Marcus Kallionkieli'}
 key_list = list(static_dict.keys())
 
-
 def printStats(day, key_list):
     for key in key_list:
         errorFlag = False
