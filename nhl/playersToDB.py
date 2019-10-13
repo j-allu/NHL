@@ -12,7 +12,7 @@ cred = credentials.Certificate('d4b4f69f6fe6.json')
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
-#ref = db.reference('nhl')
+doc_ref = db.collection(u'nhl')
 
 season = "20192020"
 today = str(datetime.strftime(datetime.now() - timedelta(0), '%Y-%m-%d'))
@@ -139,14 +139,10 @@ def getTeamsAndGoals(player):
         (homeGoals, awayGoals, isOT) = getGoals(homeGoals, awayGoals, player)
     return (homeTeam, homeGoals, awayTeam, awayGoals, isOT)
 
-
-# print(today)
-# printStats(today, key_list)
 print(dday)
 result_dict = dayResultsToDict(dday, key_list)
-# print("")
-# print(ddayMinus)
-# printStats(ddayMinus, key_list)
 print("It took {} seconds".format(int(time.time() - epoch_time_start)))
-final_dict = {today:result_dict}
+final_dict = {dday:result_dict}
 print(final_dict)
+db.collection(u'nhl').document(dday).set(final_dict)
+
