@@ -8,7 +8,7 @@ from firebase_admin import firestore
 from firebase_admin import db
 
 # Use a service account
-cred = credentials.Certificate('/home/user/Downloads/raspberrypichicken-d4b4f69f6fe6.json')
+cred = credentials.Certificate('d4b4f69f6fe6.json')
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
