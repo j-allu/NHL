@@ -12,7 +12,7 @@ cred = credentials.Certificate('/home/user/Downloads/raspberrypichicken-d4b4f69f
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
-ref = db.reference('server/saving-data/fireblog')
+#ref = db.reference('nhl')
 
 season = "20192020"
 today = str(datetime.strftime(datetime.now() - timedelta(0), '%Y-%m-%d'))
@@ -54,12 +54,7 @@ def dayResultsToDict(day, key_list):
             if day == player["stats"][0]["splits"][0]["date"]:
                 playerStats = player["stats"][0]["splits"][0]["stat"]
                 playerTeam = player["stats"][0]["splits"][0]["team"]["name"]
-                teams_goals = getTeamsAndGoals(player)
-                homeTeam = teams_goals[0]
-                homeGoals = teams_goals[1]
-                awayTeam = teams_goals[2]
-                awayGoals = teams_goals[3]
-                isOT = teams_goals[4]
+                (homeTeam, homeGoals, awayTeam, awayGoals, isOT) = getTeamsAndGoals(player)
                 player_dict= {}
                 player_dict["id"] = key
                 player_dict["goals"] = playerStats["goals"]
@@ -81,12 +76,7 @@ def dayResultsToDict(day, key_list):
                 goalerStats = player["stats"][0]["splits"][0]["stat"]
                 goalerTeam = player["stats"][0]["splits"][0]["team"]["name"]
                 if day == player["stats"][0]["splits"][0]["date"]:
-                    teams_goals = getTeamsAndGoals(player)
-                    homeTeam = teams_goals[0]
-                    homeGoals = teams_goals[1]
-                    awayTeam = teams_goals[2]
-                    awayGoals = teams_goals[3]
-                    isOT = teams_goals[4]
+                    (homeTeam, homeGoals, awayTeam, awayGoals, isOT) = getTeamsAndGoals(player)
                     player_dict = {}
                     player_dict["id"] = key
                     player_dict["goalsAgainst"] = goalerStats["goalsAgainst"]
@@ -109,7 +99,7 @@ def getGoals(homeGoals, awayGoals, player):
     :param homeGoals:
     :param awayGoals:
     :param player:
-    :return:
+    :return tuple of homeGoals(string), awayGoals(string), isOT(string:
     """
     isOT = "false"
     if homeGoals == awayGoals:
@@ -125,7 +115,7 @@ def getGoals(homeGoals, awayGoals, player):
                 homeGoals += 1
             else:
                 awayGoals += 1
-    return [homeGoals, awayGoals, isOT]
+    return (homeGoals, awayGoals, isOT)
 
 def getTeamsAndGoals(player):
     """
@@ -146,11 +136,8 @@ def getTeamsAndGoals(player):
     awayGoals = game["teams"]["away"]["teamStats"]["teamSkaterStats"]["goals"]
     isOT = "false"
     if homeGoals == awayGoals:
-        result_goals = getGoals(homeGoals, awayGoals, player)
-        homeGoals = result_goals[0]
-        awayGoals = result_goals[1]
-        isOT = result_goals[2]
-    return [homeTeam, homeGoals, awayTeam, awayGoals, isOT]
+        (homeGoals, awayGoals, isOT) = getGoals(homeGoals, awayGoals, player)
+    return (homeTeam, homeGoals, awayTeam, awayGoals, isOT)
 
 
 # print(today)
