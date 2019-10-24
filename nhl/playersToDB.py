@@ -142,7 +142,7 @@ def getTeamsAndGoals(player):
 print(dday)
 result_dict = dayResultsToDict(dday, key_list)
 print("It took {} seconds".format(int(time.time() - epoch_time_start)))
-final_dict = {dday:result_dict, "timestamp":datetime.now()}
+final_dict = {"stats":result_dict, "timestamp":datetime.now(), "gameDay":dday}
 print(final_dict)
 db.collection(u'nhl').document(dday).set(final_dict)
 
