@@ -57,8 +57,8 @@ def dayResultsToDict(day, key_list):
                 (homeTeam, homeGoals, awayTeam, awayGoals, isOT) = getTeamsAndGoals(player)
                 player_dict= {}
                 player_dict["id"] = key
-                player_dict["goals"] = playerStats["goals"]
-                player_dict["assists"] = playerStats["assists"]
+                player_dict["playerGoals"] = playerStats["goals"]
+                player_dict["playerAssists"] = playerStats["assists"]
                 player_dict["timeOnIce"] = playerStats["timeOnIce"]
                 player_dict["penaltyMinutes"] = playerStats["penaltyMinutes"]
                 player_dict["plusMinus"] = playerStats["plusMinus"]
